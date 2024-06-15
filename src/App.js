@@ -1,13 +1,36 @@
 
 import * as React from 'react';
-
+// import { useState } from 'react';
 function Board() {
-  const squares = Array(9).fill(null);
+  // default square kosong
+  const [squares, setSquares]= React.useState(Array(9).fill(null));
+  // default x true
+  const [xIsNext, setXIsNext]= React.useState(true);
+
   function selectSquare(square) {
-
+    // jika squares sudah terisi maka akan langsung return 
+    if(squares[square] || calculateWinner(squares)){
+      return;
+    }
+    const nextSquares=squares.slice();
+    // validasi x or not
+    if(xIsNext){
+      nextSquares[square]="X";
+    } else{
+      nextSquares[square]="O";
+    }
+    // set squares berdasarkan isian dari nextsquare
+    setSquares(nextSquares);
+    // set xIsnext menjadi kebalikan dari nilai yg saat ini. misal saat ini true maka akan di set menjadi false
+    setXIsNext(!xIsNext);
   }
+  const nextPlay = calculateNextValue(squares);
+  const winner = calculateWinner(squares);
+  const status = calculateStatus(winner,squares, nextPlay);
 
-  function restart() {
+  function restart() {  
+    // untuk set squares menjadi kosong semua
+    setSquares(Array(9).fill(null));
   }
 
   function renderSquare(i) {
@@ -20,23 +43,25 @@ function Board() {
 
   return (
     <div>
-      <div >STATUS</div>
-      <div >
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
+      <div >{status}</div>
+      <div className='board' >
+        <div >
+          {renderSquare(0)}
+          {renderSquare(1)}
+          {renderSquare(2)}
+        </div>
+        <div >
+          {renderSquare(3)}
+          {renderSquare(4)}
+          {renderSquare(5)}
+        </div>
+        <div >
+          {renderSquare(6)}
+          {renderSquare(7)}
+          {renderSquare(8)}
+        </div>
       </div>
-      <div >
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div >
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
-      <button onClick={restart}>
+      <button onClick={restart} className='button-restart'>
         restart
       </button>
     </div>
